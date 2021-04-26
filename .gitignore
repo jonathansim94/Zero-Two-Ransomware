@@ -7,3 +7,5 @@ obj/Debug/ZeroTwo.csproj.FileListAbsolute.txt
 obj/Release/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
 obj/Debug/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
 .gitattributes
+obj/Debug/ZeroTwo.exe
+bin/Debug/ZeroTwo.exe
