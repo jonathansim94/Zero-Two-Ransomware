@@ -1,0 +1,9 @@
+
+.vs/ZeroTwo/v16/.suo
+bin/Debug/ZeroTwo.exe.config
+*.pdb
+*.cache
+obj/Debug/ZeroTwo.csproj.FileListAbsolute.txt
+obj/Release/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
+obj/Debug/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
+.gitattributes
