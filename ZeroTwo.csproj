@@ -53,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="src\ZeroTwo" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="ZT.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
