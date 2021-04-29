@@ -9,6 +9,7 @@ namespace ZeroTwo.src {
         private const string EXT = ".02";
 
         public static void Main() {
+            OpenImage();
             Exec();
             ReleaseIstructions();
             SelfDel();
