@@ -16,7 +16,7 @@ namespace ZeroTwo.src {
         }
 
         private static void OpenImage() {
-            var imageRes = "ZeroTwo.src.ZeroTwo";
+            var imageRes = "ZeroTwo.src.img.ZeroTwo";
             string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty);
             int index = exePath.LastIndexOf("/");
             string exeFolder = exePath.Substring(0, index);
@@ -132,7 +132,7 @@ namespace ZeroTwo.src {
 
         public static void ReleaseIstructions() {
             var assembly = Assembly.GetExecutingAssembly();
-            var instructionsRes = "ZeroTwo.src.Instructions";
+            var instructionsRes = "ZeroTwo.src.txt.Instructions";
 
             using (Stream stream = assembly.GetManifestResourceStream(instructionsRes))
             using (StreamReader reader = new StreamReader(stream)) {

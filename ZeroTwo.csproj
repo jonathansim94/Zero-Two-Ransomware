@@ -45,17 +45,20 @@
     <Compile Include="src\ZeroTwo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\Instructions" />
+    <EmbeddedResource Include="src\txt\Instructions" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\ZeroTwo" />
+    <EmbeddedResource Include="src\img\ZeroTwo" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ZT.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\scr\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
