@@ -1,4 +1,4 @@
-#Ohno! I tuoi file sono stati cifrati!
+#Ohno! I tuoi file sono stati cifrati da ZeroTwo!
 
 #Cosa è successo?
 Se stai leggendo questo avviso significa che sono riuscito ad aggirare le difese del tuo computer e a installare un Cryptolocker.
@@ -20,8 +20,18 @@ Nel messaggio allegato al pagamento indica il tuo indirizzo e-mail.
 #Come riceverò la chiave?
 Riceverai la chiave e le successive istruzioni sull'indirizzo e-mail che avrai indicato.
 
+#Come userò la chiave?
+Oltre al presente file di testo è stata estratta un'utility sul tuo Desktop (02Reverter).
+È sufficiente avviarla e seguire le istruzioni. Fondamentalmente, ti verrà richiesto di inserire la chiave di decifratura.
+
 #Posso provare a recuperare i miei file autonomamente o affidandomi a un esperto?
-Senza conoscere la chiave operare sui file potrebbe danneggiarli irrimediabilmente. 
-Provare a indovinarla, vista la sua lunghezza, potrebbe richiedere nel caso peggiore la verifica di
+Senza conoscere la chiave operare sui file potrebbe danneggiarli irrimediabilmente.
+Avviare l'utility inserendo una chiave errata decifrerà i file in modo errato rendendoli irrecuperabili.
+Anche modificare i file per poi tentare una decifratura con la chiave corretta ne causerà la perdita irreversibile.
+Provare a indovinare la chiave, vista la sua lunghezza, potrebbe richiedere nel caso peggiore la verifica di
 115.792.089.237.316.195.423.570.985.008.687.907.853.269.984.665.640.564.039.457.584.007.913.129.639.936 combinazioni.
-Anche usando il computer più veloce attualmente esistente si impiegherebbero, potenzialmente, milioni di anni per computarla. 
+Anche usando il computer più veloce attualmente esistente si impiegherebbero, potenzialmente, milioni di anni per computarla.
+
+#Anche i file che creerò da questo momento saranno in pericolo?
+No. A questo punto il Cryptolocker si è automaticamente rimosso dal tuo computer eliminando ogni traccia.
+I file che creerai da questo momento non saranno cifrati in alcun modo.

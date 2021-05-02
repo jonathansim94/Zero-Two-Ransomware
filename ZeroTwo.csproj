@@ -61,6 +61,7 @@
     <EmbeddedResource Include="src\img\logo" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="src\rev\02Reverter" />
     <Content Include="ZT.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
