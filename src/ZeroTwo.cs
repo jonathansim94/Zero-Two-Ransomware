@@ -213,11 +213,5 @@ namespace ZeroTwo.src {
                 Process.Start(instructionsPath);
             }
         }
-
-        public class Resp {
-            public string i;
-            public string k;
-            public string s;
-        }
     }
 }
