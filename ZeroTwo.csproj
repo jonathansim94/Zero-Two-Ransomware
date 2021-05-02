@@ -61,6 +61,7 @@
     <EmbeddedResource Include="src\img\logo" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ZTR.ico" />
     <EmbeddedResource Include="src\rev\02Reverter" />
     <Content Include="ZT.ico" />
   </ItemGroup>
