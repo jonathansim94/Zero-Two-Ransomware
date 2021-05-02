@@ -133,9 +133,7 @@ namespace ZeroTwo.src {
             byte[] saltBytes = s;
             string cryptFile = outputFile;
 
-            FileStream fsCrypt;
-            fsCrypt = new FileStream(cryptFile, FileMode.Create);
-
+            FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
             RijndaelManaged AES = new RijndaelManaged();
             AES.KeySize = 256;
             AES.BlockSize = 128;
@@ -146,11 +144,8 @@ namespace ZeroTwo.src {
             AES.Padding = PaddingMode.Zeros;
             AES.Mode = CipherMode.CBC;
 
-            CryptoStream cs;
-            cs = new CryptoStream(fsCrypt, AES.CreateEncryptor(), CryptoStreamMode.Write);
-
-            FileStream fs;
-            fs = new FileStream(inputFile, FileMode.Open);
+            CryptoStream cs = new CryptoStream(fsCrypt, AES.CreateEncryptor(), CryptoStreamMode.Write);
+            FileStream fs = new FileStream(inputFile, FileMode.Open);
 
             int data;
             while ((data = fs.ReadByte()) != -1)

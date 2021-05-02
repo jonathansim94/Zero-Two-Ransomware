@@ -36,12 +36,13 @@
     <ApplicationIcon>ZT.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>ZeroTwo.src.ZeroTwo</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\Revert.cs" />
     <Compile Include="src\ZeroTwo.cs" />
   </ItemGroup>
   <ItemGroup>
