@@ -58,8 +58,9 @@
   <ItemGroup>
     <EmbeddedResource Include="src\arc\arc" />
     <EmbeddedResource Include="src\img\logo" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="ZT.ico" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
