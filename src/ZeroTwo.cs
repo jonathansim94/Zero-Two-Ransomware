@@ -15,7 +15,6 @@ namespace ZeroTwo.src {
         private const string PREP_BAT_NAME = "Prep.bat";
         private const string EXEC_BAT_NAME = "Update.bat";
         private const string CLEAR_BAT_NAME = "Clear.bat";
-        private const string CLEAR_TMP_FOLDER = "C:\\tmp02";
         private const string REG_KEY = "UpdatesHandler";
         private const string EXE_NAME = "WinUpdates";
 
