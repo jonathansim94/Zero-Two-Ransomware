@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace ZeroTwo.src {
-    class Revert {
+    class Reverter {
         private const string EXT = ".02";
 
         private static byte[] k = Encoding.ASCII.GetBytes("0202020202020202");
