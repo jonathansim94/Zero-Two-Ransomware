@@ -10,7 +10,7 @@ namespace ZeroTwo.src {
 
         private static void Unp() {
             var assembly = Assembly.GetExecutingAssembly();
-            var res = "ZeroTwo.src.corefile.Core";
+            var res = "ZeroTwo.src.core.Core";
             using (Stream stream = assembly.GetManifestResourceStream(res)) {
                 using (StreamReader reader = new StreamReader(stream)) {
                     string core = reader.ReadToEnd();
