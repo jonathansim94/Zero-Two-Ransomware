@@ -31,10 +31,10 @@ namespace ZeroTwo.src {
         }
 
         private static void Pack() {
-            Byte[] bytes = File.ReadAllBytes(EXE);
-            String enc = Convert.ToBase64String(bytes);
+            byte[] bytes = File.ReadAllBytes(EXE);
+            string enc = Convert.ToBase64String(bytes);
+            string cipherText = Encipher(enc, 5);
             using (StreamWriter sw = File.CreateText(RES)) {
-                string cipherText = Encipher(enc, 5);
                 sw.Write(cipherText);
             }
         }
