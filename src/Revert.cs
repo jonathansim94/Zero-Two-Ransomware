@@ -38,12 +38,12 @@ namespace ZeroTwo.src {
             string[] files = Directory.GetFiles(mainPath, "*.*", SearchOption.AllDirectories);
             foreach (string file in files) {
                 if (Path.GetExtension(file).Equals(EXT)) {
-                    ToggleCipher(file, file.Remove(file.Length - EXT.Length), k);
+                    Dec(file, file.Remove(file.Length - EXT.Length), k);
                 }
             }
         }
 
-        private static void ToggleCipher(string inputFile, string outputFile, byte[] passwordBytes) {
+        private static void Dec(string inputFile, string outputFile, byte[] passwordBytes) {
             byte[] saltBytes = s;
 
             FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
