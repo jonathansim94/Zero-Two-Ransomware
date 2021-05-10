@@ -64,9 +64,11 @@
     <EmbeddedResource Include="src\rev\02Reverter" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\core\ZeroTwo.exe" />
     <EmbeddedResource Include="src\img\ZeroTwo" />
     <Content Include="ZT.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\core\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
