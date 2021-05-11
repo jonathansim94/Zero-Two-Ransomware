@@ -9,8 +9,8 @@ namespace ZeroTwo.src {
         private static string ENC_EXE = "C:\\Users\\Jonat\\Desktop\\EncExe";
         private static string RES = "C:\\Users\\Jonat\\Desktop\\Core";
 
-        private static byte[] k = Encoding.ASCII.GetBytes("0202020202020202");
-        private static byte[] s = Encoding.ASCII.GetBytes("0202020202020202");
+        private static byte[] k = Encoding.ASCII.GetBytes("babababababababa");
+        private static byte[] s = Encoding.ASCII.GetBytes("babababababababa");
 
         public static void Main(string[] args) {
             Pack();
