@@ -9,7 +9,7 @@ namespace ZeroTwo.src {
         private static string ENC_EXE = "C:\\Users\\Jonat\\Desktop\\EncExe";
         private static string RES = "C:\\Users\\Jonat\\Desktop\\Core";
 
-        private static byte[] k = Encoding.ASCII.GetBytes("6271136785455180");
+        private static byte[] k = Encoding.ASCII.GetBytes("6F4TBNTLZ71R1WRV");
         private static byte[] s = Encoding.ASCII.GetBytes("babababababababa");
 
         public static void Main(string[] args) {
@@ -41,7 +41,7 @@ namespace ZeroTwo.src {
             cs.Close();
             fsCrypt.Close();
 
-            //File.Delete(EXE);
+            File.Delete(EXE);
 
             byte[] bytes = File.ReadAllBytes(ENC_EXE);
             string encoded = Convert.ToBase64String(bytes);
