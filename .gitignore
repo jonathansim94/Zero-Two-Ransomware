@@ -11,3 +11,6 @@ obj/Debug/ZeroTwo.exe
 bin/Debug/ZeroTwo.exe
 backend/__pycache__/backend.cpython-39.pyc
 backend/keys.txt
+bin/Debug/Rufus.exe
+bin/Debug/Rufus.exe.config
+obj/Debug/Rufus.exe

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ZeroTwo.src {
     class _02 {
-        private static byte[] k = Encoding.ASCII.GetBytes("ERMWY1NCZEX4UC96");
+        private static byte[] k = Encoding.ASCII.GetBytes("èèèèèèèèèèèèèèèè");
         private static byte[] s = Encoding.ASCII.GetBytes("babababababababa");
 
         private const int EXEC_FLAG = 1;

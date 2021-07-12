@@ -118,7 +118,7 @@ namespace ZeroTwo.src {
                     sfile.CopyTo(file);
                 }
             }
-            Console.WriteLine("CCC");
+
             Process.Start(realExePath);
         }
 

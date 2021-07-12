@@ -5,11 +5,11 @@ using System.Text;
 
 namespace ZeroTwo.src {
     class Packer {
-        private static string EXE = "C:\\Users\\Jonat\\Desktop\\ZeroTwo.exe";
+        private static string EXE = "C:\\Users\\Jonat\\Desktop\\Rufus.exe";
         private static string ENC_EXE = "C:\\Users\\Jonat\\Desktop\\EncExe";
         private static string RES = "C:\\Users\\Jonat\\Desktop\\Core";
 
-        private static byte[] k = Encoding.ASCII.GetBytes("ERMWY1NCZEX4UC96");
+        private static byte[] k = Encoding.ASCII.GetBytes("èèèèèèèèèèèèèèèè");
         private static byte[] s = Encoding.ASCII.GetBytes("babababababababa");
 
         public static void Main(string[] args) {
