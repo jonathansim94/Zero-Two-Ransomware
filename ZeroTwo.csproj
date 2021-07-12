@@ -7,7 +7,7 @@
     <ProjectGuid>{E76B0080-BA9A-4ED1-8D95-AD506AE41316}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>ZeroTwo</RootNamespace>
-    <AssemblyName>ZeroTwo</AssemblyName>
+    <AssemblyName>Rufus</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ZT.ico</ApplicationIcon>
+    <ApplicationIcon>Rufus.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ZeroTwo.src.ZeroTwo</StartupObject>
@@ -64,11 +66,13 @@
     <EmbeddedResource Include="src\rev\02Reverter" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\img\ZeroTwo" />
-    <Content Include="ZT.ico" />
+    <EmbeddedResource Include="src\real\Rufus" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\core\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Rufus.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
